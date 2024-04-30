@@ -3,6 +3,7 @@ package amr.fawzi.crudApp.model;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,19 +11,32 @@ import java.util.Date;
 
 public class ProductDTO {
 
-    @NotEmpty(message = "Name Is Required")
+    public ProductDTO(Product product) {
+        this.name = product.getName();
+        this.price = product.getPrice();
+        this.brand = product.getBrand();
+        this.category = product.getCategory();
+        this.description = product.getDescription();
+    }
+    public ProductDTO() {}
+
+
+    @NotEmpty(message = "Name is required")
     private String name;
-    @Min(0)
+
+    @NotNull(message = "Price is required")
     private double price;
-    @NotEmpty(message = "Brand Is Required")
+
+    @NotEmpty(message = "Brand is required")
     private String brand;
-    @NotEmpty(message = "Category Is Required")
+
+    @NotEmpty(message = "Category is required")
     private String category;
-    @Size(min = 10,message = "the description should be at least 10 characters")
-    @Size(min = 10,message = "the description should not be more than 1000 characters")
-    @Column(columnDefinition = "Text")
+
+    @NotEmpty(message = "Description is required")
     private String description;
-    private Date createdAt;
+
+    @NotNull(message = "Image file is required")
     private MultipartFile imageFile;
 
     public String getName() {
@@ -65,19 +79,21 @@ public class ProductDTO {
         this.description = description;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public MultipartFile getImageFile() {
         return imageFile;
     }
 
     public void setImageFile(MultipartFile imageFile) {
         this.imageFile = imageFile;
+    }
+
+    public Product toProduct() {
+        Product product = new Product();
+        product.setName(name);
+        product.setPrice(price);
+        product.setBrand(brand);
+        product.setCategory(category);
+        product.setDescription(description);
+        return product;
     }
 }
